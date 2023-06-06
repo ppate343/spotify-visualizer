@@ -1,7 +1,9 @@
-const express = require("express");
+
 require('dotenv').config()
 const querystring = require('node:querystring');
 const axios = require("axios");
+
+const express = require("express");
 
 var client_id = process.env.CLIENT_ID
 var client_secret = process.env.CLIENT_SECRET
@@ -21,18 +23,6 @@ var generateRandomString = function (length) {
 
 app.use(express.static(__dirname + '/public'))
 
-//this page contains the link to the spotify authorization page
-//contains custom url queries that pertain to my specific app
-// app.get("/login", (req, res) => {
-
-//     // var state = generateRandomString(16);
-//     var scope = 'user-read-private user-read-email';
-
-//     res.send("<a href='https://accounts.spotify.com/authorize?client_id=" +
-//         client_id +
-//         "&response_type=code&redirect_uri=" + redirect_uri + "&scope=" + scope + ">Sign in</a>"
-//     );
-// });
 
 app.get('/login', function (req, res) {
 
@@ -77,29 +67,6 @@ app.get("/profile", async (req, res) => {
 
     console.log(spotifyResponse.data)
 });
-
-// app.get('/refresh_token', function (req, res) {
-
-//     var refresh_token = req.query.refresh_token;
-//     var authOptions = {
-//         url: 'https://accounts.spotify.com/api/token',
-//         headers: { 'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64')) },
-//         form: {
-//             grant_type: 'refresh_token',
-//             refresh_token: refresh_token
-//         },
-//         json: true
-//     };
-
-//     request.post(authOptions, function (error, response, body) {
-//         if (!error && response.statusCode === 200) {
-//             var access_token = body.access_token;
-//             res.send({
-//                 'access_token': access_token
-//             });
-//         }
-//     });
-// });
 
 
 app.listen(8080)
