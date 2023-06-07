@@ -1,17 +1,21 @@
 
 require('dotenv').config()
-const querystring = require('node:querystring');
+const querystring = require('querystring');
 const axios = require("axios");
 
 const express = require("express");
-
-var client_id = process.env.CLIENT_ID
-var client_secret = process.env.CLIENT_SECRET
-var redirect_uri = 'http://localhost:8080/profile'
-
 const app = express();
+const port = 8888;
 
-var generateRandomString = function (length) {
+//importing environment variables 
+const CLIENT_ID = process.env.CLIENT_ID
+const CLIENT_SECRET = process.env.CLIENT_SECRET
+const REDIRECT_URI = process.env.REDIRECT_URI
+
+
+
+//generates random string containing numbers and letters 
+const generateRandomString = function (length) {
     var text = '';
     var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -21,19 +25,27 @@ var generateRandomString = function (length) {
     return text;
 };
 
-app.use(express.static(__dirname + '/public'))
+const stateKey = 'spotify_auth_state';
 
+// app.use(express.static(__dirname + '/public'))
 
+//requesting authorization 
 app.get('/login', function (req, res) {
 
-    var state = generateRandomString(16);
-    var scope = 'user-read-private user-read-email';
-    var queryParams = querystring.stringify({
+    //optional query params 
+    const state = generateRandomString(16);
+    //setting cookie with spotify auth state key and state random string value 
+    res.cookie(stateKey, state);
+
+    //optional query param: accessing details about current logged in users account and email 
+    const scope = "user-read-private user-read-email";
+
+    const queryParams = querystring.stringify({
+        client_id: CLIENT_ID,
         response_type: 'code',
-        client_id: client_id,
-        scope: scope,
-        redirect_uri: redirect_uri,
-        state: state
+        redirect_uri: REDIRECT_URI,
+        state: state,
+        scope: scope
     });
     // console.log(queryParams);
 
@@ -41,33 +53,97 @@ app.get('/login', function (req, res) {
 
 });
 
-app.get("/profile", async (req, res) => {
-    // console.log("spotify response code" + req.query.code);
-    res.send("profile page");
+//requesting refresh and access tokens; spotify returns access and refresh tokens 
+app.get("/callback", async (req, res) => {
 
-    var queryParams = querystring.stringify({
+
+    // accessing code parameter 
+    const code = req.query.code || null;
+
+    // creating const queryParams = to string paramaters needed for the query 
+    const queryParams = querystring.stringify({
         grant_type: "authorization_code",
-        code: req.query.code,
-        redirect_uri: redirect_uri,
+        code: code,
+        redirect_uri: REDIRECT_URI,
     })
-    var authorization = (new Buffer.from(client_id + ':' + client_secret).toString('base64'));
 
-    console.log(authorization);
+    // creating authorization parameter from client id and client secret in base 64 format for cross site scripting attack mitigation 
+    var authorization = (new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64'));
 
-    const spotifyResponse = await axios.post(
-        "https://accounts.spotify.com/api/token", queryParams, {
+    axios({
+        method: 'post',
+        url: 'https://accounts.spotify.com/api/token',
+        data: queryParams,
         headers: {
-            Authorization: "Basic " + authorization,
             "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: "Basic " + authorization,
         },
-        json: true
-    }
-    )
+    })
+        .then(response => {
+            if (response.status === 200) {
+                const { access_token, token_type } = response.data;
+                // console.log(access_token);
+                // console.log(token_type);
 
+                // using access token to get/ currect users profile 
+                axios.get('https://api.spotify.com/v1/me', {
+                    headers: {
+                        Authorization: token_type + " " + access_token
+                    }
+                })
+                    .then(response => {
+                        res.send('json data' + '<pre>' + JSON.stringify(response.data, null, 2) + '</pre>');
+                        // console.log('response loop')
 
-    console.log(spotifyResponse.data)
+                    })
+                    .catch(error => {
+                        res.send(error);
+                        // console.log("error catch 1");
+                    });
+            } else {
+                res.send(response);
+            }
+        })
+
+        .catch(error => {
+            res.send(error)
+        })
+
+});
+
+//requesting refresh token if token is expired. 
+app.get('/refresh_token', function (req, res) {
+
+    const { refresh_token } = req.query;
+    const authorization = (new Buffer.from(CLIENT_ID + ':' + CLIENT_SECRET).toString('base64'));
+
+    const queryParams = querystring.stringify({
+        grant_type: 'refresh_token',
+        refresh_token: refresh_token
+    })
+
+    axios({
+        method: 'post',
+        url: 'https://accounts.spotify.com/api/token',
+        data: queryParams,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: "Basic " + authorization,
+        },
+    })
+
+        .then(response => {
+            res.send(response.data)
+        })
+        .catch(error => {
+            res.send(error)
+        })
 });
 
 
-app.listen(8080)
-console.log("app running on 8080");
+
+// console.log(data);
+
+app.listen(port, () => {
+    console.log(`express app listening at http://localhost:${port}`);
+})

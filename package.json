@@ -4,8 +4,7 @@
   "description": "express.js application using spotify api to display user data",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,5 +12,8 @@
     "axios": "^1.4.0",
     "dotenv": "^16.1.4",
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
