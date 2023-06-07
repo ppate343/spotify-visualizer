@@ -4,7 +4,10 @@
   "description": "express.js application using spotify api to display user data",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "server": "nodemon server.js",
+    "client": "cd client && npm start",
+    "postinstall": "cd client && npm install"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +17,7 @@
     "express": "^4.18.2"
   },
   "devDependencies": {
+    "concurrently": "^8.1.0",
     "nodemon": "^2.0.22"
   }
 }
