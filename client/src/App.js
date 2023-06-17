@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { accessToken } from './spotify';
+import { accessToken, logout } from './spotify';
 
 import logo from './logo.svg';
 import './App.css';
@@ -10,6 +10,12 @@ function App() {
 
   useEffect(() => {
     setToken(accessToken);
+
+    // const fetchData = async = () => {
+    //   try {
+    //     const response = await getCurrent
+    //   }
+    // }
 
   }, [])
 
@@ -23,7 +29,13 @@ function App() {
           >
             Log in to Spotify
           </a>
-        ) : (<h1>Logged in!</h1>)}
+        ) : (
+          <>
+            <h1>Logged in!</h1>
+            <button onClick={logout}>Log Out</button>
+          </>
+
+        )}
       </header>
     </div>
   );
