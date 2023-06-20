@@ -1,4 +1,5 @@
 import axios from "axios"
+import queryString from 'query-string';
 
 // Map for localstorage keys 
 const LOCALSTORAGE_KEYS = {
@@ -52,10 +53,13 @@ const refreshToken = async () => {
         // use '/refresh_token endpoint from our node app
         const { data } = await axios.get(`/refresh_token?refresh_token=${LOCALSTORAGE_VALUES.refreshToken}`);
 
+
+
         //update localstorage values 
         window.localStorage.setItem(LOCALSTORAGE_KEYS.accessToken, data.access_token);
         window.localStorage.setItem(LOCALSTORAGE_KEYS.timeStamp, Date.now());
 
+        console.log(accessToken);
         //reload page for localstorage updates to be reflected 
         window.location.reload();
 
@@ -75,22 +79,28 @@ const getAccessToken = () => {
         [LOCALSTORAGE_KEYS.refreshToken]: urlParams.get('refresh_token'),
         [LOCALSTORAGE_KEYS.expireTime]: urlParams.get('expires_in'),
     };
+    console.log(urlParams.get('access_token'));
 
     const hasError = urlParams.get('error');
 
     // if there is an error OR the token in localstorage has expired, refresh the token
     if (hasError || hasTokenExpired() || LOCALSTORAGE_VALUES.accessToken === 'undefined') {
         refreshToken();
+        console.log("refreshing ")
     }
     // if there is a valid access token in localstorage, use that token 
     if (LOCALSTORAGE_VALUES.accessToken && LOCALSTORAGE_VALUES.accessToken !== 'undefined') {
         return LOCALSTORAGE_VALUES.accessToken;
+
+        console.log("localstorage values passed", [LOCALSTORAGE_VALUES.accessToken]);
     }
     // if there is a token in the URL query params, user is logging in for the first time
     if (queryParams[LOCALSTORAGE_KEYS.accessToken]) {
         //storing the query params in localstorage
         for (const property in queryParams) {
             window.localStorage.setItem(property, queryParams[property]);
+
+            console.log("setting value");
         }
 
         // set timestamp
@@ -107,3 +117,16 @@ const getAccessToken = () => {
 
 export const accessToken = getAccessToken();
 
+//setting axios global request handlers 
+
+axios.defaults.baseURL = 'https://api.spotify.com/v1';
+axios.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
+
+console.log(` authorization header: ${accessToken}`);
+
+axios.defaults.headers['Content-Type'] = 'application/json';
+
+
+//get current users profile (spotify api request) 
+//endpoint: https://api.spotify.com/v1/me
+export const getCurrentUserProfile = () => axios.get('/me'); 
