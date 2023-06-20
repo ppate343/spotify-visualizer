@@ -1,23 +1,32 @@
 import { useState, useEffect } from 'react';
-import { accessToken, logout } from './spotify';
-
-import logo from './logo.svg';
+import { accessToken, logout, getCurrentUserProfile } from './spotify';
 import './App.css';
 
 function App() {
 
   const [token, setToken] = useState(null);
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
+
     setToken(accessToken);
 
-    // const fetchData = async = () => {
-    //   try {
-    //     const response = await getCurrent
-    //   }
-    // }
+    //getCurrentuserProfile returns a promise -> use a try and catch
+    const fetchData = async () => {
+      try {
+        const { data } = await getCurrentUserProfile();
+        setProfile(data);
 
-  }, [])
+        console.log(data);
+
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    fetchData();
+
+  }, []);
 
   return (
     <div className="App">
