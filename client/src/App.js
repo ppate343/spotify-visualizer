@@ -15,13 +15,15 @@ function App() {
 
     //getCurrentuserProfile returns a promise -> use a try and catch
     const fetchData = async () => {
-
-      const { data } = await getCurrentUserProfile();
-      setProfile(data);
-      console.log(data);
+      try {
+        const { data } = await getCurrentUserProfile();
+        setProfile(data);
+      } catch (e) {
+        console.error(e);
+      }
     };
 
-    catchErrors(fetchData());
+    fetchData();
 
   }, []);
 
