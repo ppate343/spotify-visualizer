@@ -5,9 +5,12 @@ import {
   RouterProvider,
   Route,
   Link,
+  useLocation,
 } from "react-router-dom";
+
 import './index.css';
 import App from './App';
+import scrollToTop from './scrollToTop';
 import reportWebVitals from './reportWebVitals';
 
 
@@ -17,9 +20,21 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: "about",
-    element: <div>About</div>,
+    path: "/top-artists",
+    element: <div>top artists</div>,
   },
+  {
+    path: "/top-tracks",
+    element: <div>top tracks</div>,
+  },
+  {
+    path: "/playlists/:id",
+    element: <div>top playlists </div>,
+  },
+  {
+    path: "/playlists",
+    element: <h1>Playlists</h1>,
+  }
 ]);
 
 
