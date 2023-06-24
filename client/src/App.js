@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { accessToken, logout, getCurrentUserProfile } from './spotify';
 import { catchErrors } from './utils';
-
+import styled from 'styled-components';
 import './App.css';
 
 function App() {
