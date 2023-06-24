@@ -1,5 +1,5 @@
 import axios from "axios"
-import queryString from 'query-string';
+
 
 // Map for localstorage keys 
 const LOCALSTORAGE_KEYS = {
