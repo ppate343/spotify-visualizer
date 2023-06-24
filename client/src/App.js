@@ -1,8 +1,20 @@
 import { useState, useEffect } from 'react';
 import { accessToken, logout, getCurrentUserProfile } from './spotify';
 import { catchErrors } from './utils';
-import styled from 'styled-components';
+// import styled from 'styled-components';
+import styled from 'styled-components/macro';
+import GlobalStyles from "./styles/GlobalStyles";
 import './App.css';
+
+const StyledLoginButton = styled.a`
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  margin: 20px auto;
+  border-radius: 30px;
+  display: inline-block;
+`;
+
 
 function App() {
 
@@ -29,14 +41,15 @@ function App() {
 
   return (
     <div className="App">
+      <GlobalStyles />
       <header className="App-header">
         {!token ? (
-          <a
+          <StyledLoginButton
             className="App-link"
             href="http://localhost:8888/login"
           >
             Log in to Spotify
-          </a>
+          </StyledLoginButton>
         ) : (
           <>
             <h1>Logged in!</h1>
