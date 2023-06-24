@@ -26,7 +26,7 @@ export const logout = () => {
 
     }
     //navigating to homepage 
-    window.location = window.location.originl
+    window.location = window.location.origin;
 
 };
 
