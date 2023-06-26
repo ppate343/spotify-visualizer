@@ -4,7 +4,7 @@ import { catchErrors } from './utils';
 // import styled from 'styled-components';
 import styled from 'styled-components/macro';
 import GlobalStyles from "./styles/GlobalStyles";
-import './App.css';
+// import './App.css';
 
 const StyledLoginButton = styled.a`
   background-color: green;
