@@ -1,19 +1,23 @@
+import React from 'react'
 import { useState, useEffect } from 'react';
 import { accessToken, logout, getCurrentUserProfile } from './spotify';
 import { catchErrors } from './utils';
 // import styled from 'styled-components';
 import styled from 'styled-components/macro';
-import GlobalStyles from "./styles/GlobalStyles";
+import { GlobalStyles } from "./styles";
+import { Login } from "./pages"
+import { Profile } from './pages'
+
 // import './App.css';
 
-const StyledLoginButton = styled.a`
-  background-color: green;
-  color: white;
-  padding: 10px 20px;
-  margin: 20px auto;
-  border-radius: 30px;
-  display: inline-block;
-`;
+// const StyledLoginButton = styled.a`
+//   background-color: green;
+//   color: white;
+//   padding: 10px 20px;
+//   margin: 20px auto;
+//   border-radius: 30px;
+//   display: inline-block;
+// `;
 
 
 function App() {
@@ -44,27 +48,12 @@ function App() {
       <GlobalStyles />
       <header className="App-header">
         {!token ? (
-          <StyledLoginButton
-            className="App-link"
-            href="http://localhost:8888/login"
-          >
-            Log in to Spotify
-          </StyledLoginButton>
+          <Login />
         ) : (
           <>
             <h1>Logged in!</h1>
             <button onClick={logout}>Log Out</button>
-
-            {profile && (
-              <div>
-                <h1>{profile.display_name}</h1>
-                <p>{profile.followers.total} Followers</p>
-                {profile.images.length && profile.images[0].url && (
-                  <img src={profile.images[0].url} alt="Avatar" />
-                )}
-
-              </div>
-            )}
+            <Profile />
           </>
         )}
       </header>
