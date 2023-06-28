@@ -4,7 +4,6 @@ import variables from './variables';
 
 
 const GlobalStyles = createGlobalStyle`
-  ${fonts};
   ${variables};
 
   html {
