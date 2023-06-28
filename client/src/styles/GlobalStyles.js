@@ -1,10 +1,9 @@
 import { createGlobalStyle } from 'styled-components/macro';
-import fonts from './fonts';
-import variables from './variables';
+
 
 
 const GlobalStyles = createGlobalStyle`
-  ${variables};
+
 
   html {
     box-sizing: border-box;
