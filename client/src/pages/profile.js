@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { getCurrentUserProfile } from '../spotify';
+import { getCurrentUserProfile, getCurrentUserPlaylists } from '../spotify';
 import { StyledHeader } from '../styles';
 
 
 const Profile = () => {
     const [profile, setProfile] = useState(null);
+    const [playlists, setPlaylists] = useState(null);
 
     useEffect(() => {
 
@@ -12,13 +13,16 @@ const Profile = () => {
         //getCurrentuserProfile returns a promise -> use a try and catch
         const fetchData = async () => {
             try {
-                const { data } = await getCurrentUserProfile();
-                setProfile(data);
+                const userProfile = await getCurrentUserProfile();
+                setProfile(userProfile.data);
+
+                const userPlaylists = await getCurrentUserPlaylists();
+                setPlaylists(userPlaylists.data);
+
             } catch (e) {
                 console.error(e);
             }
         };
-
         fetchData();
 
     }, []);
@@ -38,6 +42,9 @@ const Profile = () => {
                                 <div className="header__overline">Profile</div>
                                 <h1 className="header__name">{profile.display_name}</h1>
                                 <p className="header__meta">
+                                    {playlists && (
+                                        <span>{playlists.total} Playlist{playlists.total !== 1 ? 's' : ''}</span>
+                                    )}
                                     <span>
                                         {profile.followers.total} Follower{profile.followers.total !== 1 ? 's' : ''}
                                     </span>
