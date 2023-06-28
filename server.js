@@ -38,7 +38,11 @@ app.get('/login', function (req, res) {
     res.cookie(stateKey, state);
 
     //optional query param: accessing details about current logged in users account and email 
-    const scope = "user-read-private user-read-email";
+    const scope = [
+        'user-read-private',
+        'user-read-email',
+        'user-top-read',
+    ].join(' ');
 
     const queryParams = querystring.stringify({
         client_id: CLIENT_ID,
