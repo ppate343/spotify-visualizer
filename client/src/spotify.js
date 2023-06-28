@@ -92,7 +92,7 @@ const getAccessToken = () => {
     if (LOCALSTORAGE_VALUES.accessToken && LOCALSTORAGE_VALUES.accessToken !== 'undefined') {
         return LOCALSTORAGE_VALUES.accessToken;
 
-        console.log("localstorage values passed", [LOCALSTORAGE_VALUES.accessToken]);
+
     }
     // if there is a token in the URL query params, user is logging in for the first time
     if (queryParams[LOCALSTORAGE_KEYS.accessToken]) {
@@ -129,4 +129,10 @@ axios.defaults.headers['Content-Type'] = 'application/json';
 
 //get current users profile (spotify api request) 
 //endpoint: https://api.spotify.com/v1/me
-export const getCurrentUserProfile = () => axios.get('/me'); 
+export const getCurrentUserProfile = () => axios.get('/me');
+
+//get current users playlists
+//https://developer.spotify.com/documentation/web-api/reference/#endpoint-get-a-list-of-current-users-playlists
+export const getCurrentUserPlaylists = (limit = 20) => {
+    return axios.get(`/me/playlists?limit=${limit}`);
+}
