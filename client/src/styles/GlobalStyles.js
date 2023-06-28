@@ -2,6 +2,7 @@ import { createGlobalStyle } from 'styled-components/macro';
 import fonts from './fonts';
 import variables from './variables';
 
+
 const GlobalStyles = createGlobalStyle`
   ${fonts};
   ${variables};
@@ -25,10 +26,10 @@ const GlobalStyles = createGlobalStyle`
     overflow-x: hidden;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
-    background-color: var(--black);
-    color: var(--white);
-    font-family: var(--font);
-    font-size: var(--fz-md);
+    background-color: #121212;
+    color: white;
+    font-family: sans-serif;
+    font-size: 16px;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -59,16 +60,16 @@ const GlobalStyles = createGlobalStyle`
     border: 0;
     cursor: pointer;
     font-family: inherit;
-    border-radius: var(--border-radius-pill);
+    border-radius: 30px;
     background-color: rgba(0,0,0,.7);
-    color: var(--white);
-    font-size: var(--fz-sm);
+    color: white;
+    font-size: 14px;
     font-weight: 700;
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: 8px 12px;
 
     &:hover,
     &:focus {
-      background-color: var(--dark-grey);
+      background-color: #535353;
       outline: 0;
     }
   }
@@ -81,7 +82,7 @@ const GlobalStyles = createGlobalStyle`
 
   main {
     position: relative;
-    padding: var(--spacing-xxl) 0;
+    padding: 64px 0;
   }
 
   .app {
@@ -111,10 +112,10 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .empty-notice {
-    color: var(--grey);
-    font-size: var(--fz-lg);
+    color: #535353;
+    font-size: 20px;;
     text-align: center;
-    padding: var(--spacing-xxl);
+    padding: 64px;;
   }
 `;
 
